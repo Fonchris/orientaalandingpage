@@ -13,6 +13,24 @@ Import this repository into Vercel. The included `vercel.json` configures:
 
 No environment variables are required for the current landing page.
 
+## Google Search Console
+
+The site is prepared for indexing with `robots.txt`, `sitemap.xml`, a canonical URL, Open Graph metadata, and Organization structured data. A blog is not required for Search Console or for Google to index the landing page.
+
+After deploying the site to Vercel and connecting `orientaa.com`:
+
+1. Open [Google Search Console](https://search.google.com/search-console) and choose **Add property**.
+2. Choose **Domain** and enter `orientaa.com` without `https://`.
+3. Google will show a DNS TXT record. Add that record at the DNS provider managing `orientaa.com`.
+4. Return to Search Console and click **Verify**. DNS changes can take some time to propagate.
+5. Open **Sitemaps**, enter `sitemap.xml`, and click **Submit**.
+6. Use **URL inspection** for `https://orientaa.com/` and request indexing after the domain is verified.
+
+The expected public files are:
+
+- `https://orientaa.com/robots.txt`
+- `https://orientaa.com/sitemap.xml`
+
 To verify locally before deploying:
 
 ```bash
