@@ -6,4 +6,5 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: { alias: { '@': `${import.meta.dirname}/src` } },
+  server: { watch: { usePolling: true, interval: 1000 } },
 })
