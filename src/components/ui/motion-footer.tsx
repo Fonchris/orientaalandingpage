@@ -14,9 +14,16 @@ const STYLES = `
   --footer-muted: var(--muted);
   --footer-line: var(--line);
   --footer-accent: var(--teal);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
   font-family: 'DM Sans', sans-serif;
+  font-size: inherit;
   -webkit-font-smoothing: antialiased;
 }
+.cinematic-footer-wrapper span:last-child { margin-left: 0; font-family: inherit; font-size: inherit; }
 .cinematic-footer-wrapper::selection { background: color-mix(in srgb, var(--footer-accent) 25%, transparent); }
 @keyframes footer-breathe { from { transform: translate(-50%, -50%) scale(1); opacity: .45; } to { transform: translate(-50%, -50%) scale(1.1); opacity: .8; } }
 @keyframes footer-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }

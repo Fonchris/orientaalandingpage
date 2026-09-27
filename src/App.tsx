@@ -42,6 +42,19 @@ function App() {
         </div>
       </section>
       <GlobeFeatureSection />
+      <section className="mission-section" aria-labelledby="mission-title">
+        <div className="mission-intro">
+          <div className="mission-intro-copy"><p className="section-kicker">Why Orientaa exists</p><h2 id="mission-title">A clearer direction<br /><em>for every fresh mind.</em></h2></div>
+          <p>We orient, guide, and nurture young people toward career paths and fields of study that fit who they are and who they want to become.</p>
+        </div>
+        <div className="mission-story">
+          <p>Orientaa gives students the opportunity to learn, network, and gain insight from industry experts, equipping them with the knowledge and confidence to excel across different areas of life.</p>
+          <div className="mission-objective"><span className="mission-objective-label">Our objective</span><strong>Reach 99.9% of Africa&apos;s youth with personalised recommendations.</strong><span>Building an ecosystem for growth, networking, and success.</span></div>
+        </div>
+        <div className="service-list" aria-label="Orientaa resources and services">
+          {['Career guidance', 'Networking', 'Opportunities', 'Mentorship', 'Career development'].map((service, index) => <div className="service-item" key={service}><span>0{index + 1}</span><strong>{service}</strong><ArrowRight size={16} /></div>)}
+        </div>
+      </section>
       <section className="proof-strip"><p>Made for every kind of ambition</p><div className="proof-items"><span><UsersRound size={17} /> 12k+ students</span><span><CircleCheck size={17} /> 500+ universities</span><span><Sparkles size={17} /> Smarter decisions</span></div></section>
       <section id="how-it-works" className="section-block"><div className="section-heading"><div><p className="section-kicker">A clearer way forward</p><h2>Less scrolling.<br /><em>More certainty.</em></h2></div><p>Choosing where to study is a big decision. Orientaa makes it feel a little more like finding your direction.</p></div><div className="steps-grid"><article><span className="step-number">01</span><span className="step-icon"><Search size={20} /></span><h3>Tell us what matters</h3><p>Share your interests, goals, and the kind of life you want to build.</p></article><article><span className="step-number">02</span><span className="step-icon teal-icon"><Sparkles size={20} /></span><h3>Get your matches</h3><p>Our system connects the dots across thousands of programs and universities.</p></article><article><span className="step-number">03</span><span className="step-icon orange-icon"><Check size={20} /></span><h3>Move with confidence</h3><p>Compare your shortlist and take the next step with a plan that feels like yours.</p></article></div></section>
       <TeamShowcase />
