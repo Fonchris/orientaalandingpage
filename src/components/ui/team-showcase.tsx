@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { FaBehance, FaInstagram, FaLinkedinIn, FaTwitter } from 'react-icons/fa'
+import { UserRound } from 'lucide-react'
 import founderImage from '@/assets/founderImage.jpeg'
 import { cn } from '@/lib/utils'
 
@@ -7,17 +8,17 @@ export interface TeamMember {
   id: string
   name: string
   role: string
-  image: string
+  image?: string
   social?: { twitter?: string; linkedin?: string; instagram?: string; behance?: string }
 }
 
 const DEFAULT_MEMBERS: TeamMember[] = [
   { id: 'founder', name: 'Founder', role: 'CEO & FOUNDER', image: founderImage, social: { linkedin: '#', twitter: '#' } },
-  { id: 'product', name: 'Product Lead', role: 'PRODUCT STRATEGY', image: founderImage, social: { linkedin: '#' } },
-  { id: 'design', name: 'Creative Lead', role: 'CREATIVE DIRECTION', image: founderImage, social: { instagram: '#' } },
-  { id: 'engineering', name: 'Engineering Lead', role: 'LEAD ENGINEERING', image: founderImage, social: { linkedin: '#', twitter: '#' } },
-  { id: 'growth', name: 'Partnerships Lead', role: 'UNIVERSITY PARTNERSHIPS', image: founderImage, social: { linkedin: '#' } },
-  { id: 'community', name: 'Community Lead', role: 'COMMUNITY & BRAND', image: founderImage, social: { instagram: '#' } },
+  { id: 'product', name: 'Product Lead', role: 'PRODUCT STRATEGY', social: { linkedin: '#' } },
+  { id: 'design', name: 'Creative Lead', role: 'CREATIVE DIRECTION', social: { instagram: '#' } },
+  { id: 'engineering', name: 'Engineering Lead', role: 'LEAD ENGINEERING', social: { linkedin: '#', twitter: '#' } },
+  { id: 'growth', name: 'Partnerships Lead', role: 'UNIVERSITY PARTNERSHIPS', social: { linkedin: '#' } },
+  { id: 'community', name: 'Community Lead', role: 'COMMUNITY & BRAND', social: { instagram: '#' } },
 ]
 
 interface TeamShowcaseProps {
@@ -58,7 +59,7 @@ export default function TeamShowcase({ members = DEFAULT_MEMBERS }: TeamShowcase
 function PhotoCard({ member, className, activeId, onHover }: { member: TeamMember; className: string; activeId: string | null; onHover: (id: string | null) => void }) {
   const isActive = activeId === member.id
   return <div className={cn('team-photo-card', className, activeId && !isActive ? 'team-dimmed' : '')} onMouseEnter={() => onHover(member.id)} onMouseLeave={() => onHover(null)} onFocus={() => onHover(member.id)} onBlur={() => onHover(null)} tabIndex={0}>
-    <img src={member.image} alt={`${member.name}, ${member.role}`} className={cn('team-photo', isActive ? 'team-photo-active' : '')} />
+    {member.image ? <img src={member.image} alt={`${member.name}, ${member.role}`} className={cn('team-photo', isActive ? 'team-photo-active' : '')} /> : <div className={cn('team-placeholder', `team-placeholder-${member.id}`, isActive ? 'team-photo-active' : '')}><UserRound className="team-placeholder-icon" strokeWidth={1.4} /><span>{member.role.split(' ')[0]}</span></div>}
   </div>
 }
 
