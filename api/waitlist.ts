@@ -18,7 +18,7 @@ export default async function handler(request: WaitlistRequest, response: Waitli
   const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
   if (!emailPattern.test(email)) return response.status(400).json({ error: 'Enter a valid email address.' })
 
-  const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/$/, '')
+  const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/$/, '').replace(/\/rest\/v1$/, '')
   const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
   if (!supabaseUrl || !supabaseServiceRoleKey) return response.status(503).json({ error: 'The waitlist is not configured yet.' })
 
