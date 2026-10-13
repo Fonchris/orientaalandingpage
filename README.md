@@ -11,7 +11,7 @@ Import this repository into Vercel. The included `vercel.json` configures:
 - Output directory: `dist`
 - SPA rewrites so client-side routes resolve correctly
 
-No environment variables are required for the current landing page.
+The waitlist uses a Vercel serverless function and Web3Forms. Create a free Web3Forms account, copy its access key, and add it to Vercel as `WEB3FORMS_ACCESS_KEY` for the Production environment. Redeploy after adding the variable. The key is only read by `api/waitlist.ts` and is never exposed to the browser.
 
 ## Google Search Console
 

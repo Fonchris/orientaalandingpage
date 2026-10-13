@@ -1,4 +1,4 @@
-import { ArrowRight, BarChart3, Check, ChevronRight, CircleCheck, Mail, MapPin, Phone, Search, Sparkles, Target, UsersRound } from 'lucide-react'
+import { ArrowRight, BarChart3, Check, ChevronRight, CircleCheck, Mail, MapPin, Phone, Search, Sparkles, Target, UsersRound, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import GlobeFeatureSection from '@/components/ui/globe-feature-section'
@@ -13,19 +13,71 @@ const recommendations = [
   { name: 'University of Cape Town', initials: 'CT', location: 'Cape Town, South Africa', fit: 88, tag: 'Good fit', color: 'green' },
 ]
 
+function WaitlistDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
+  const [email, setEmail] = useState('')
+  const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle')
+  const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (!open) return
+    const onKeyDown = (event: KeyboardEvent) => { if (event.key === 'Escape') onClose() }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [open, onClose])
+
+  useEffect(() => {
+    if (!open) { setEmail(''); setStatus('idle'); setError('') }
+  }, [open])
+
+  if (!open) return null
+
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    setStatus('submitting')
+    setError('')
+    try {
+      const response = await fetch('/api/waitlist', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email: email.trim() }) })
+      const result = await response.json() as { error?: string }
+      if (!response.ok) throw new Error(result.error || 'Something went wrong. Please try again.')
+      setStatus('success')
+    } catch (submitError) {
+      setStatus('error')
+      setError(submitError instanceof Error ? submitError.message : 'Something went wrong. Please try again.')
+    }
+  }
+
+  return <div className="waitlist-overlay" role="presentation" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}>
+    <div className="waitlist-dialog" role="dialog" aria-modal="true" aria-labelledby="waitlist-title">
+      <button type="button" className="waitlist-close" aria-label="Close waitlist form" onClick={onClose}><X size={18} /></button>
+      {status === 'success' ? <div className="waitlist-success"><span className="waitlist-success-icon"><Check size={20} /></span><h2 id="waitlist-title">You&apos;re on the list.</h2><p>We&apos;ll be in touch when Orientaa is ready for your next chapter.</p><Button variant="teal" onClick={onClose}>Done</Button></div> : <>
+        <p className="section-kicker">Early access</p>
+        <h2 id="waitlist-title">Be first to find<br /><em>your fit.</em></h2>
+        <p className="waitlist-description">Leave your email and we&apos;ll let you know when Orientaa is ready for your next chapter.</p>
+        <form className="waitlist-form" onSubmit={handleSubmit}>
+          <label htmlFor="waitlist-email">Email address</label>
+          <input id="waitlist-email" name="email" type="email" autoComplete="email" placeholder="you@example.com" value={email} onChange={(event) => setEmail(event.target.value)} required />
+          {status === 'error' && <p className="waitlist-error" role="alert">{error}</p>}
+          <Button type="submit" variant="teal" disabled={status === 'submitting'}>{status === 'submitting' ? 'Joining...' : 'Join the waitlist'} {status !== 'submitting' && <ArrowRight size={17} />}</Button>
+        </form>
+      </>}
+    </div>
+  </div>
+}
+
 function App() {
   const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [waitlistOpen, setWaitlistOpen] = useState(false)
   useEffect(() => { document.documentElement.dataset.theme = theme }, [theme])
 
   return <div id="top" className="app-shell">
-    <Header theme={theme} onThemeToggle={() => setTheme(theme === 'light' ? 'dark' : 'light')} />
+    <Header theme={theme} onThemeToggle={() => setTheme(theme === 'light' ? 'dark' : 'light')} onWaitlistClick={() => setWaitlistOpen(true)} />
     <main>
       <section className="hero-section">
         <div className="hero-copy">
           <div className="eyebrow"><span className="eyebrow-dot" /> Your next chapter starts here</div>
           <h1>Find the university<br /><em>that fits you.</em></h1>
           <p className="hero-description">Orientaa turns your ambitions, interests, and goals into a clear path toward the right university.</p>
-          <div className="hero-actions"><Button variant="teal" size="lg">Join the waitlist <ArrowRight size={18} /></Button><a href="#how-it-works" className="text-link"><span className="play-icon">▶</span> See how it works</a></div>
+          <div className="hero-actions"><Button variant="teal" size="lg" onClick={() => setWaitlistOpen(true)}>Join the waitlist <ArrowRight size={18} /></Button><a href="#how-it-works" className="text-link"><span className="play-icon">▶</span> See how it works</a></div>
           <div className="trust-row"><div className="avatar-stack"><span>AM</span><span>SK</span><span>JL</span><span>+</span></div><span>Join 12,000+ students finding their way</span></div>
         </div>
         <div className="hero-visual" aria-label="Orientaa university recommendation preview">
@@ -59,9 +111,10 @@ function App() {
       <section id="how-it-works" className="section-block"><div className="section-heading"><div><p className="section-kicker">A clearer way forward</p><h2>Less scrolling.<br /><em>More certainty.</em></h2></div><p>Choosing where to study is a big decision. Orientaa makes it feel a little more like finding your direction.</p></div><div className="steps-grid"><article><span className="step-number">01</span><span className="step-icon"><Search size={20} /></span><h3>Tell us what matters</h3><p>Share your interests, goals, and the kind of life you want to build.</p></article><article><span className="step-number">02</span><span className="step-icon teal-icon"><Sparkles size={20} /></span><h3>Get your matches</h3><p>Our system connects the dots across thousands of programs and universities.</p></article><article><span className="step-number">03</span><span className="step-icon orange-icon"><Check size={20} /></span><h3>Move with confidence</h3><p>Compare your shortlist and take the next step with a plan that feels like yours.</p></article></div></section>
       <TeamShowcase />
       <section className="contact-section" aria-labelledby="contact-title"><div><p className="section-kicker">Partnerships & donations</p><h2 id="contact-title">Help us make opportunity<br /><em>easier to find.</em></h2><p>Interested in partnering with Orientaa or supporting the next generation of students? Reach out directly.</p></div><div className="contact-links"><a href="mailto:pemmenyif@gmail.com"><Mail size={17} /><span><small>Email us</small><strong>pemmenyif@gmail.com</strong></span><ArrowRight size={15} /></a><a href="tel:+237677684842"><Phone size={17} /><span><small>Call us</small><strong>+237 677 684 842</strong></span><ArrowRight size={15} /></a><a href="https://wa.link/xxvnj5" target="_blank" rel="noreferrer"><span className="whatsapp-mark">W</span><span><small>Message on WhatsApp</small><strong>Start a conversation</strong></span><ArrowRight size={15} /></a></div></section>
-      <section id="about" className="cta-section"><div><p className="section-kicker">Your future, better oriented</p><h2>Start with a little<br /><em>curiosity.</em></h2></div><Button variant="teal" size="lg">Join the waitlist <ArrowRight size={18} /></Button></section>
+      <section id="about" className="cta-section"><div><p className="section-kicker">Your future, better oriented</p><h2>Start with a little<br /><em>curiosity.</em></h2></div><Button variant="teal" size="lg" onClick={() => setWaitlistOpen(true)}>Join the waitlist <ArrowRight size={18} /></Button></section>
     </main>
     <CinematicFooter />
+    <WaitlistDialog open={waitlistOpen} onClose={() => setWaitlistOpen(false)} />
   </div>
 }
 
