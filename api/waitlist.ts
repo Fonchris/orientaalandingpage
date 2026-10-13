@@ -18,30 +18,30 @@ export default async function handler(request: WaitlistRequest, response: Waitli
   const email = typeof body?.email === 'string' ? body.email.trim().toLowerCase() : ''
   if (!emailPattern.test(email)) return response.status(400).json({ error: 'Enter a valid email address.' })
 
-  const accessKey = process.env.WEB3FORMS_ACCESS_KEY
-  if (!accessKey) return response.status(503).json({ error: 'The waitlist is not configured yet.' })
+  const supabaseUrl = process.env.SUPABASE_URL?.trim().replace(/\/$/, '')
+  const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim()
+  if (!supabaseUrl || !supabaseServiceRoleKey) return response.status(503).json({ error: 'The waitlist is not configured yet.' })
 
   try {
-    const providerResponse = await fetch('https://api.web3forms.com/submit', {
+    const databaseResponse = await fetch(`${supabaseUrl}/rest/v1/waitlist`, {
       method: 'POST',
-      headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        access_key: accessKey,
-        subject: 'New Orientaa waitlist signup',
-        from_name: 'Orientaa landing page',
-        email,
-        message: `${email} joined the Orientaa waitlist.`,
-      }),
+      headers: {
+        apikey: supabaseServiceRoleKey,
+        Authorization: `Bearer ${supabaseServiceRoleKey}`,
+        'Content-Type': 'application/json',
+        Prefer: 'return=minimal',
+      },
+      body: JSON.stringify({ email }),
     })
-    const providerResult = await providerResponse.json() as { success?: boolean | string; message?: string }
-    const providerSucceeded = providerResult.success === true || providerResult.success === 'true'
-    if (!providerResponse.ok || !providerSucceeded) {
-      console.error('Web3Forms rejected waitlist signup:', providerResponse.status, providerResult.message || 'Unknown provider error')
-      return response.status(502).json({ error: providerResult.message || 'We could not save your signup. Please try again.' })
+    if (databaseResponse.status === 409) return response.status(200).json({ message: 'Signup already exists.' })
+    if (!databaseResponse.ok) {
+      const databaseError = await databaseResponse.text()
+      console.error('Supabase rejected waitlist signup:', databaseResponse.status, databaseError)
+      return response.status(502).json({ error: 'We could not save your signup. Please try again.' })
     }
-    return response.status(200).json({ message: 'Signup received.' })
+    return response.status(201).json({ message: 'Signup received.' })
   } catch (error) {
-    console.error('Waitlist provider request failed:', error)
+    console.error('Supabase waitlist request failed:', error)
     return response.status(502).json({ error: 'We could not save your signup. Please try again.' })
   }
 }
