@@ -24,8 +24,8 @@ export default async function handler(request: WaitlistRequest, response: Waitli
   try {
     const providerResponse = await fetch('https://api.web3forms.com/submit', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-      body: JSON.stringify({
+      headers: { Accept: 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
         access_key: accessKey,
         subject: 'New Orientaa waitlist signup',
         from_name: 'Orientaa landing page',
@@ -33,10 +33,15 @@ export default async function handler(request: WaitlistRequest, response: Waitli
         message: `${email} joined the Orientaa waitlist.`,
       }),
     })
-    const providerResult = await providerResponse.json() as { success?: boolean }
-    if (!providerResponse.ok || !providerResult.success) return response.status(502).json({ error: 'We could not save your signup. Please try again.' })
+    const providerResult = await providerResponse.json() as { success?: boolean | string; message?: string }
+    const providerSucceeded = providerResult.success === true || providerResult.success === 'true'
+    if (!providerResponse.ok || !providerSucceeded) {
+      console.error('Web3Forms rejected waitlist signup:', providerResponse.status, providerResult.message || 'Unknown provider error')
+      return response.status(502).json({ error: providerResult.message || 'We could not save your signup. Please try again.' })
+    }
     return response.status(200).json({ message: 'Signup received.' })
-  } catch {
+  } catch (error) {
+    console.error('Waitlist provider request failed:', error)
     return response.status(502).json({ error: 'We could not save your signup. Please try again.' })
   }
 }
