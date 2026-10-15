@@ -14,9 +14,9 @@ const GLOBE_CONFIG: COBEOptions = {
   diffuse: 0.4,
   mapSamples: 16000,
   mapBrightness: 1.2,
-  baseColor: [0.92, 0.98, 0.96],
-  markerColor: [0.094, 0.604, 0.549],
-  glowColor: [0.85, 0.96, 0.91],
+  baseColor: [0.42, 0.58, 0.68],
+  markerColor: [0.08, 0.42, 0.72],
+  glowColor: [0.72, 0.88, 0.98],
   markers: [
     { location: [3.848, 11.502], size: 0.08 },
     { location: [6.524, 3.379], size: 0.1 },
@@ -76,7 +76,7 @@ export function Globe({ className, config = GLOBE_CONFIG }: { className?: string
     const globe = createGlobe(canvas, { ...config, width: width.current * 2, height: width.current * 2 })
     let animationFrame = 0
     const render = () => {
-      if (pointerInteracting.current === null) phi.current += 0.005
+      if (pointerInteracting.current === null) phi.current += 0.012
       globe.update({ phi: phi.current + rotation.current, width: width.current * 2, height: width.current * 2 })
       animationFrame = requestAnimationFrame(render)
     }

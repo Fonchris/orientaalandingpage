@@ -1,17 +1,14 @@
-import { ArrowRight, BarChart3, Check, ChevronRight, CircleCheck, Mail, MapPin, Phone, Search, Sparkles, Target, UsersRound, X } from 'lucide-react'
+import { ArrowRight, Check, CircleCheck, Mail, Phone, Search, Sparkles, UsersRound, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import GlobeFeatureSection from '@/components/ui/globe-feature-section'
 import { Header } from '@/components/ui/header-3'
 import { CinematicFooter } from '@/components/ui/motion-footer'
 import TeamShowcase from '@/components/ui/team-showcase'
+import { HeroDesignali } from '@/components/ui/hero-designali'
+import soluxDarkLogo from '@/assets/logo_1.png'
+import soluxLightLogo from '@/assets/logo_a.png'
 import './App.css'
-
-const recommendations = [
-  { name: 'University of Yaoundé I', initials: 'UY', location: 'Yaoundé, Cameroon', fit: 96, tag: 'Great fit', color: 'orange' },
-  { name: 'Covenant University', initials: 'CU', location: 'Ota, Nigeria', fit: 91, tag: 'Strong fit', color: 'blue' },
-  { name: 'University of Cape Town', initials: 'CT', location: 'Cape Town, South Africa', fit: 88, tag: 'Good fit', color: 'green' },
-]
 
 function WaitlistDialog({ open, onClose }: { open: boolean; onClose: () => void }) {
   const [email, setEmail] = useState('')
@@ -72,28 +69,22 @@ function App() {
   return <div id="top" className="app-shell">
     <Header theme={theme} onThemeToggle={() => setTheme(theme === 'light' ? 'dark' : 'light')} onWaitlistClick={() => setWaitlistOpen(true)} />
     <main>
-      <section className="hero-section">
-        <div className="hero-copy">
-          <div className="eyebrow"><span className="eyebrow-dot" /> Your next chapter starts here</div>
-          <h1>Find the university<br /><em>that fits you.</em></h1>
-          <p className="hero-description">Orientaa turns your ambitions, interests, and goals into a clear path toward the right university.</p>
-          <div className="hero-actions"><Button variant="teal" size="lg" onClick={() => setWaitlistOpen(true)}>Join the waitlist <ArrowRight size={18} /></Button><a href="#how-it-works" className="text-link"><span className="play-icon">▶</span> See how it works</a></div>
-          <div className="trust-row"><div className="avatar-stack"><span>AM</span><span>SK</span><span>JL</span><span>+</span></div><span>Join 12,000+ students finding their way</span></div>
-        </div>
-        <div className="hero-visual" aria-label="Orientaa university recommendation preview">
-          <div className="visual-orbit orbit-one" /><div className="visual-orbit orbit-two" />
-          <div className="dashboard-card">
-            <div className="dashboard-top"><div><p className="tiny-label">YOUR ORIENTAA MATCH</p><h2>Universities made for you</h2></div><span className="sparkle-badge"><Sparkles size={16} /></span></div>
-            <div className="search-strip"><Search size={16} /><span>Search your dream degree</span><kbd>⌘ K</kbd></div>
-            <div className="match-label"><span>Top matches</span><span className="match-count">24 universities</span></div>
-            <div className="recommendation-list">{recommendations.map((item) => <div className="recommendation" key={item.name}><div className={`uni-mark ${item.color}`}>{item.initials}</div><div className="uni-details"><strong>{item.name}</strong><span><MapPin size={12} /> {item.location}</span></div><div className="fit-score"><strong>{item.fit}%</strong><small>{item.tag}</small></div><ChevronRight size={16} className="recommendation-arrow" /></div>)}</div>
-            <div className="dashboard-footer"><span><CircleCheck size={14} /> Personalised for you</span><a href="#how-it-works">View all <ArrowRight size={13} /></a></div>
-          </div>
-          <div className="floating-note note-top"><span className="note-icon mint"><Target size={16} /></span><span><strong>Built around you</strong><small>Your goals come first</small></span></div>
-          <div className="floating-note note-bottom"><span className="note-icon peach"><BarChart3 size={16} /></span><span><strong>96% match</strong><small>for your next step</small></span></div>
-        </div>
-      </section>
+      <HeroDesignali onWaitlistClick={() => setWaitlistOpen(true)} />
       <GlobeFeatureSection />
+      <section id="partners" className="partners-section" aria-labelledby="partners-title">
+        <div className="partners-heading">
+          <p className="partners-eyebrow">Partnerships</p>
+          <h2 id="partners-title">Works with your stack</h2>
+          <p>Connect with the people and organisations already shaping your next step.</p>
+        </div>
+        <div className="partners-logo-row" aria-label="Orientaa partner logos">
+          <a href="https://www.solux-elearning.com/" target="_blank" rel="noreferrer" className="partner-logo-tile" aria-label="Visit Solux e-learning">
+            <img src={soluxLightLogo} alt="Solux" className="partner-logo partner-logo-light" />
+            <img src={soluxDarkLogo} alt="Solux" className="partner-logo partner-logo-dark" />
+          </a>
+        </div>
+        <a href="#contact-title" className="partners-action">View all partnerships <ArrowRight size={14} /></a>
+      </section>
       <section className="mission-section" aria-labelledby="mission-title">
         <div className="mission-intro">
           <div className="mission-intro-copy"><p className="section-kicker">Why Orientaa exists</p><h2 id="mission-title">A clearer direction<br /><em>for every fresh mind.</em></h2></div>

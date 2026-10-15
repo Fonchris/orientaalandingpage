@@ -66,7 +66,7 @@ const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>(({ as:
 MagneticButton.displayName = 'MagneticButton'
 
 function MarqueeItem() {
-  return <div className="flex items-center gap-10 px-5"><span>Personalised guidance</span><span className="text-[var(--teal)]">✦</span><span>Confident decisions</span><span className="text-[#f2a477]">✦</span><span>Opportunity, oriented</span><span className="text-[var(--teal)]">✦</span></div>
+  return <div className="flex items-center gap-10 px-5"><span>Personalised guidance</span><span className="text-[var(--teal)]">✦</span><span>Confident decisions</span><span className="text-[var(--teal)]">✦</span><span>Opportunity, oriented</span><span className="text-[var(--teal)]">✦</span></div>
 }
 
 export function CinematicFooter() {
@@ -105,7 +105,7 @@ export function CinematicFooter() {
         </div>
         <div className="relative z-10 flex w-full flex-col items-center justify-between gap-5 px-6 pb-8 text-center text-[10px] font-semibold uppercase tracking-[.2em] text-[var(--footer-muted)] md:flex-row md:px-12 md:text-left">
           <span>© 2025 Orientaa. All rights reserved.</span>
-          <span className="footer-pill flex items-center gap-2 rounded-full px-5 py-3"><span>Made with</span><Heart className="size-3 fill-current text-[#e88e61]" /><span>for your next step</span></span>
+          <span className="footer-pill flex items-center gap-2 rounded-full px-5 py-3"><span>Made with</span><Heart className="size-3 fill-current text-[var(--teal)]" /><span>for your next step</span></span>
           <MagneticButton as="button" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="footer-pill flex size-11 items-center justify-center rounded-full"><ArrowUp className="size-4" /></MagneticButton>
         </div>
       </footer>
